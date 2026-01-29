@@ -1,0 +1,172 @@
+// ============================================================================
+// FIREBASE STORAGE SECURITY RULES
+// Smart Attendance System - Profile Photos
+// ============================================================================
+//
+// IMPORTANT: Copy and paste these rules into your Firebase Storage Security Rules
+//
+// HOW TO APPLY:
+// 1. Go to: https://console.firebase.google.com/project/athgo-5b01d/storage/athgo-5b01d.firebasestorage.app/rules
+// 2. Delete all existing rules
+// 3. Copy the rules below (starting from "rules_version = '2';")
+// 4. Paste into the Firebase Console
+// 5. Click "Publish"
+//
+// ============================================================================
+
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper function: Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function: Check if user owns the file
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    // Helper function: Check if user is a teacher
+    function isTeacher() {
+      return isAuthenticated() && 
+             exists(/databases/(default)/documents/users/$(request.auth.uid)) &&
+             get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'teacher';
+    }
+    
+    // Helper function: Check if user is an admin
+    function isAdmin() {
+      return isAuthenticated() && 
+             exists(/databases/(default)/documents/users/$(request.auth.uid)) &&
+             get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Helper function: Validate image file
+    function isValidImage() {
+      return request.resource.contentType.matches('image/.*') &&
+             request.resource.size < 2 * 1024 * 1024; // Max 2 MB
+    }
+    
+    // ========================================================================
+    // PROFILE PHOTOS RULES
+    // ========================================================================
+    // Path: /profilePhotos/{role}/{userId}.jpg
+    //
+    // Security Requirements:
+    // - Users can only upload/delete their own photos
+    // - Users can read their own photos
+    // - Teachers can read all student photos (for attendance verification)
+    // - Admins can read all photos
+    // - File must be a valid image (jpg, png, webp)
+    // - File size must be < 2 MB
+    // ========================================================================
+    
+    match /profilePhotos/{role}/{userId}.jpg {
+      
+      // READ ACCESS
+      allow read: if isAuthenticated() && (
+        // User can read their own photo
+        isOwner(userId) ||
+        // Teachers can read student photos
+        (role == 'student' && isTeacher()) ||
+        // Admins can read all photos
+        isAdmin()
+      );
+      
+      // WRITE ACCESS (Upload/Update)
+      allow write: if isAuthenticated() && 
+                      isOwner(userId) && 
+                      isValidImage();
+      
+      // DELETE ACCESS
+      allow delete: if isAuthenticated() && isOwner(userId);
+    }
+    
+    // ========================================================================
+    // DENY ALL OTHER PATHS
+    // ========================================================================
+    // Any other storage paths are denied by default
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+// ============================================================================
+// SECURITY NOTES:
+// ============================================================================
+// 
+// 1. AUTHENTICATION REQUIRED
+//    - All operations require user to be authenticated
+//    - Anonymous users cannot access any photos
+//
+// 2. OWNERSHIP VERIFICATION
+//    - Users can only upload/delete their own photos
+//    - File path must match authenticated user ID
+//
+// 3. ROLE-BASED ACCESS
+//    - Students can only see their own photos
+//    - Teachers can see all student photos (for attendance reports)
+//    - Admins can see all photos
+//
+// 4. FILE VALIDATION
+//    - Only image files allowed (JPEG, PNG, WebP)
+//    - Maximum file size: 2 MB
+//    - File type validated on upload
+//
+// 5. PATH STRUCTURE
+//    - /profilePhotos/student/{userId}.jpg
+//    - /profilePhotos/teacher/{userId}.jpg
+//    - /profilePhotos/admin/{userId}.jpg
+//
+// 6. PRIVACY PROTECTION
+//    - Students cannot access other students' photos
+//    - Students cannot access teacher photos
+//    - Only authorized roles can view photos
+//
+// 7. ANTI-TAMPERING
+//    - Users cannot upload files to other user paths
+//    - Users cannot overwrite other users' files
+//    - File paths are strictly validated
+//
+// ============================================================================
+
+// ============================================================================
+// TESTING CHECKLIST:
+// ============================================================================
+// 
+// ✅ Student uploads their own photo → ALLOWED
+// ✅ Student views their own photo → ALLOWED
+// ✅ Student deletes their own photo → ALLOWED
+// ❌ Student uploads to another user's path → DENIED
+// ❌ Student views another student's photo → DENIED
+// ❌ Student views teacher's photo → DENIED
+// ✅ Teacher views student photo → ALLOWED
+// ✅ Teacher uploads their own photo → ALLOWED
+// ❌ Teacher uploads to student's path → DENIED
+// ✅ Admin views any photo → ALLOWED
+// ❌ Unauthenticated user accesses any photo → DENIED
+// ❌ Upload file > 2 MB → DENIED
+// ❌ Upload non-image file → DENIED
+//
+// ============================================================================
+
+// ============================================================================
+// TROUBLESHOOTING:
+// ============================================================================
+//
+// ERROR: "User does not have permission to access this object"
+// SOLUTION: Verify that:
+//   1. User is authenticated
+//   2. User ID matches the file path
+//   3. User role has read permissions
+//
+// ERROR: "File size exceeds maximum allowed"
+// SOLUTION: Compress image before upload (handled by app)
+//
+// ERROR: "Invalid file type"
+// SOLUTION: Only upload JPG, PNG, or WebP images
+//
+// ============================================================================

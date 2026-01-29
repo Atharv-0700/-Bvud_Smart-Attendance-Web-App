@@ -1,0 +1,183 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║              SMART ATTENDANCE SYSTEM - FILE STRUCTURE                    ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+PROJECT ROOT
+│
+├── vite.config.ts              ✓ Path alias configured: @ → /src
+│
+├── src/
+│   │
+│   ├── assets/                 🚨 YOU NEED TO CREATE THIS FOLDER
+│   │   ├── clg_logo.png        🚨 YOU NEED TO ADD THIS FILE
+│   │   └── clg_campus.png      🚨 YOU NEED TO ADD THIS FILE
+│   │
+│   ├── types/
+│   │   ├── images.d.ts         ✅ CREATED (TypeScript declarations)
+│   │   ├── attendanceTypes.ts
+│   │   ├── sessionTypes.ts
+│   │   └── teacherTypes.ts
+│   │
+│   ├── app/
+│   │   └── components/
+│   │       ├── Login.tsx       ✅ UPDATED (new imports)
+│   │       ├── StudentDashboard.tsx
+│   │       ├── TeacherDashboard.tsx
+│   │       └── ...
+│   │
+│   ├── config/
+│   │   └── firebase.ts
+│   │
+│   └── ...
+│
+└── Documentation/
+    ├── FIX_COMPLETE_README.md          ✅ Complete overview
+    ├── IMAGE_SETUP_INSTRUCTIONS.md     ✅ Detailed guide
+    ├── QUICK_FIX_SUMMARY.md            ✅ Quick reference
+    ├── IMAGE_FIX_CHECKLIST.txt         ✅ Visual checklist
+    ├── verify-images.sh                ✅ Verification script
+    └── create-placeholder-images.sh    ✅ Placeholder creator
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+IMPORT FLOW (How it works):
+
+  Login.tsx (Line 2-3)
+      │
+      │ import clgLogo from '@/assets/clg_logo.png'
+      │ import clgCampus from '@/assets/clg_campus.png'
+      │
+      ↓
+  Vite Resolver
+      │
+      │ @ alias resolves to /src (from vite.config.ts)
+      │
+      ↓
+  Actual Path
+      │
+      │ /src/assets/clg_logo.png
+      │ /src/assets/clg_campus.png
+      │
+      ↓
+  TypeScript Validation
+      │
+      │ Checks images.d.ts for module declarations
+      │ declare module "*.png" { ... }
+      │
+      ↓
+  ✅ Import Successful
+      │
+      │ Variables contain image URLs
+      │ - clgLogo → '/src/assets/clg_logo.png'
+      │ - clgCampus → '/src/assets/clg_campus.png'
+      │
+      ↓
+  JSX Usage
+      │
+      │ <img src={clgCampus} />
+      │ <ImageWithFallback src={clgLogo} />
+      │
+      ↓
+  🎨 Browser displays the images
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+WHAT YOU SEE ON THE LOGIN PAGE:
+
+    ┌─────────────────────────────────────────────────────────────┐
+    │                                                             │
+    │  [Campus Building Photo - Full Screen Background]          │
+    │  ← This is clg_campus.png                                   │
+    │                                                             │
+    │               ┌─────────────────────────┐                   │
+    │               │    ╭─────────╮          │                   │
+    │               │    │  LOGO   │          │  ← clg_logo.png   │
+    │               │    ╰─────────╯          │                   │
+    │               │                         │                   │
+    │               │  Smart Attendance       │                   │
+    │               │  System                 │                   │
+    │               │                         │                   │
+    │               │  [Student] [Teacher]    │                   │
+    │               │                         │                   │
+    │               │  Email: _______         │                   │
+    │               │  Password: _____        │                   │
+    │               │  [Login Button]         │                   │
+    │               │                         │                   │
+    │               └─────────────────────────┘                   │
+    │                                                             │
+    └─────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+BEFORE vs AFTER:
+
+BEFORE (Not Working):
+  ❌ import image from 'figma:asset/abc123.png'
+     → Virtual module, doesn't exist in production
+     → Causes "Cannot find module" errors
+
+AFTER (Working):
+  ✅ import clgLogo from '@/assets/clg_logo.png'
+     → Real file path
+     → Vite bundles it correctly
+     → Works in both dev and production
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+YOUR ACTION ITEMS:
+
+  1. Create folder:
+     $ mkdir -p src/assets
+
+  2. Add two PNG files:
+     • src/assets/clg_logo.png (College logo)
+     • src/assets/clg_campus.png (Campus photo)
+
+  3. Verify:
+     $ ./verify-images.sh
+
+  4. Restart:
+     $ npm run dev
+
+  5. Test:
+     Open browser → Check login page → Verify images display
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+FOLDER NAME RULES:
+
+  ✅ CORRECT:    src/assets/
+  ❌ WRONG:      src/Assets/
+  ❌ WRONG:      src/asset/
+  ❌ WRONG:      src/ASSETS/
+  ❌ WRONG:      public/assets/
+  ❌ WRONG:      assets/
+
+FILE NAME RULES:
+
+  ✅ CORRECT:    clg_logo.png
+  ❌ WRONG:      clg-logo.png
+  ❌ WRONG:      CLG_LOGO.png
+  ❌ WRONG:      logo.png
+  
+  ✅ CORRECT:    clg_campus.png
+  ❌ WRONG:      clg-campus.png
+  ❌ WRONG:      campus.png
+  ❌ WRONG:      college_campus.png
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+NEED HELP?
+
+  📖 Full Guide:      FIX_COMPLETE_README.md
+  ⚡ Quick Start:     QUICK_FIX_SUMMARY.md
+  📋 Detailed Steps:  IMAGE_SETUP_INSTRUCTIONS.md
+  🔍 Verify Setup:    ./verify-images.sh
+
+═══════════════════════════════════════════════════════════════════════════

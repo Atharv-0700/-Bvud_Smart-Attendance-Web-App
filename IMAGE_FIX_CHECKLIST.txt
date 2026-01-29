@@ -1,0 +1,88 @@
+╔══════════════════════════════════════════════════════════════════╗
+║         SMART ATTENDANCE SYSTEM - IMAGE FIX CHECKLIST           ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  ✅ COMPLETED (by AI):                                          ║
+║  ────────────────────                                           ║
+║   [✓] Created src/types/images.d.ts                             ║
+║   [✓] Updated Login.tsx with new import paths                   ║
+║   [✓] Verified vite.config.ts path alias                        ║
+║   [✓] Generated documentation files                             ║
+║                                                                  ║
+║  🚨 TODO (by YOU):                                              ║
+║  ──────────────                                                 ║
+║   [ ] Step 1: Create the assets folder                          ║
+║       Command: mkdir -p src/assets                              ║
+║                                                                  ║
+║   [ ] Step 2: Add clg_logo.png                                  ║
+║       Location: src/assets/clg_logo.png                         ║
+║       Type: College/University logo (PNG, transparent bg)       ║
+║       Size: Recommended 500x500px, < 500KB                      ║
+║                                                                  ║
+║   [ ] Step 3: Add clg_campus.png                                ║
+║       Location: src/assets/clg_campus.png                       ║
+║       Type: Campus building photo                               ║
+║       Size: Recommended 1920x1080px, < 2MB                      ║
+║                                                                  ║
+║   [ ] Step 4: Verify files exist                                ║
+║       Command: ./verify-images.sh                               ║
+║       Or: ls -lh src/assets/                                    ║
+║                                                                  ║
+║   [ ] Step 5: Restart dev server                                ║
+║       Stop: Ctrl+C                                              ║
+║       Start: npm run dev                                        ║
+║                                                                  ║
+║   [ ] Step 6: Test the login page                               ║
+║       - Background should show campus building                  ║
+║       - Logo should appear in circular badge                    ║
+║       - No console errors                                       ║
+║                                                                  ║
+║  📋 FILE STRUCTURE:                                             ║
+║  ─────────────────                                              ║
+║   src/                                                          ║
+║   ├── assets/              ← CREATE THIS                        ║
+║   │   ├── clg_logo.png     ← ADD THIS                           ║
+║   │   └── clg_campus.png   ← ADD THIS                           ║
+║   ├── app/                                                      ║
+║   │   └── components/                                           ║
+║   │       └── Login.tsx    ✓ Updated                            ║
+║   └── types/                                                    ║
+║       └── images.d.ts      ✓ Created                            ║
+║                                                                  ║
+║  🔧 TROUBLESHOOTING:                                            ║
+║  ──────────────────                                             ║
+║   Error: Cannot find module '@/assets/clg_logo.png'             ║
+║   → Make sure both image files are in src/assets/               ║
+║                                                                  ║
+║   Error: Module not found                                       ║
+║   → Check folder name is 'assets' (lowercase, plural)           ║
+║   → Check file names exactly match: clg_logo.png, clg_campus.png║
+║                                                                  ║
+║   Images not loading                                            ║
+║   → Clear Vite cache: rm -rf node_modules/.vite                 ║
+║   → Restart dev server                                          ║
+║                                                                  ║
+║  📚 DOCUMENTATION:                                              ║
+║  ────────────────                                               ║
+║   • IMAGE_SETUP_INSTRUCTIONS.md - Full detailed guide           ║
+║   • QUICK_FIX_SUMMARY.md - Quick reference                      ║
+║   • verify-images.sh - Automated verification script            ║
+║                                                                  ║
+║  ✨ WHAT'S CHANGED:                                             ║
+║  ────────────────────                                           ║
+║   OLD: import img from 'figma:asset/abc123.png'                 ║
+║   NEW: import clgLogo from '@/assets/clg_logo.png'              ║
+║                                                                  ║
+║   OLD: import building from 'figma:asset/def456.png'            ║
+║   NEW: import clgCampus from '@/assets/clg_campus.png'          ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+NEXT STEPS:
+1. Create src/assets/ folder
+2. Add your two image files
+3. Run: ./verify-images.sh
+4. Restart: npm run dev
+5. Test login page
+
+Need help? Check IMAGE_SETUP_INSTRUCTIONS.md

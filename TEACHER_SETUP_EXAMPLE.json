@@ -1,0 +1,81 @@
+{
+  "comment": "Update your teacher's user profile in Firebase to include class_id",
+  "instructions": [
+    "1. Open Firebase Console: https://console.firebase.google.com/project/athgo-5b01d/database/athgo-5b01d-default-rtdb/data",
+    "2. Navigate to: /users/{your_teacher_id}",
+    "3. Click the '+' button to add a new field",
+    "4. Add field: class_id",
+    "5. Set value: BCA_1A (or your class)",
+    "6. Save changes"
+  ],
+  "teacher_profile_example": {
+    "id": "teacher_001",
+    "name": "Dr. Sharma",
+    "email": "sharma@bvdu.ac.in",
+    "role": "teacher",
+    "semester": 1,
+    "class_id": "BCA_1A",
+    "subjects": [
+      "Data Structures",
+      "Database Management",
+      "Web Development",
+      "Operating Systems",
+      "Computer Networks"
+    ],
+    "profilePhotoUrl": null
+  },
+  "class_id_formats": {
+    "description": "Standard format is BCA_{semester}{division}",
+    "examples": [
+      "BCA_1A - Semester 1, Division A",
+      "BCA_1B - Semester 1, Division B",
+      "BCA_2A - Semester 2, Division A",
+      "BCA_2B - Semester 2, Division B",
+      "BCA_3A - Semester 3, Division A",
+      "BCA_3B - Semester 3, Division B",
+      "BCA_4A - Semester 4, Division A",
+      "BCA_4B - Semester 4, Division B",
+      "BCA_5A - Semester 5, Division A",
+      "BCA_5B - Semester 5, Division B",
+      "BCA_6A - Semester 6, Division A",
+      "BCA_6B - Semester 6, Division B"
+    ]
+  },
+  "multiple_teachers_example": {
+    "teacher_001": {
+      "id": "teacher_001",
+      "name": "Dr. Sharma",
+      "email": "sharma@bvdu.ac.in",
+      "role": "teacher",
+      "semester": 1,
+      "class_id": "BCA_1A",
+      "subjects": ["Data Structures", "C Programming"]
+    },
+    "teacher_002": {
+      "id": "teacher_002",
+      "name": "Prof. Mehta",
+      "email": "mehta@bvdu.ac.in",
+      "role": "teacher",
+      "semester": 2,
+      "class_id": "BCA_2A",
+      "subjects": ["Java Programming", "DBMS"]
+    },
+    "teacher_003": {
+      "id": "teacher_003",
+      "name": "Dr. Patel",
+      "email": "patel@bvdu.ac.in",
+      "role": "teacher",
+      "semester": 3,
+      "class_id": "BCA_3A",
+      "subjects": ["Web Development", "Python Programming"]
+    }
+  },
+  "quick_test_setup": {
+    "step_1": "Add class_id to your teacher profile",
+    "step_2": "Create 3-5 test students with same class_id",
+    "step_3": "Login as teacher and go to Internal Marks",
+    "step_4": "Select a subject from dropdown",
+    "step_5": "Enter test marks and click Save",
+    "step_6": "Verify data in Firebase at /internal_marks/{class_id}/{subject}"
+  }
+}

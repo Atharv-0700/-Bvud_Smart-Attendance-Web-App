@@ -1,0 +1,58 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    
+    "users": {
+      "$userId": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid == $userId"
+      }
+    },
+    
+    "teacherSettings": {
+      "$teacherId": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid == $teacherId"
+      }
+    },
+    
+    "lectures": {
+      ".indexOn": ["teacherId", "active", "timestamp", "semester"],
+      "$lectureId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    
+    "attendance": {
+      ".indexOn": ["studentId", "teacherId", "lectureId", "timestamp", "semester"],
+      "$attendanceId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    
+    "studentAttendance": {
+      "$studentId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    
+    "devices": {
+      "$userId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    
+    "deviceMismatchLogs": {
+      ".indexOn": ["timestamp"],
+      "$studentId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    }
+  }
+}

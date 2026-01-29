@@ -1,0 +1,85 @@
+// ============================================================================
+// FIREBASE STORAGE SECURITY RULES (SIMPLIFIED)
+// Smart Attendance System - Profile Photos
+// FOR REALTIME DATABASE (Not Firestore)
+// ============================================================================
+//
+// COPY AND PASTE THESE RULES TO:
+// https://console.firebase.google.com/project/athgo-5b01d/storage/athgo-5b01d.firebasestorage.app/rules
+//
+// ============================================================================
+
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // ========================================================================
+    // PROFILE PHOTOS RULES
+    // ========================================================================
+    // Path: /profilePhotos/{role}/{userId}.jpg
+    //
+    // Security:
+    // - Users can only upload/delete their own photos
+    // - Users can read their own photos
+    // - Any authenticated user can read student photos (for teacher reports)
+    // - File must be an image < 2 MB
+    // ========================================================================
+    
+    match /profilePhotos/{role}/{userId}.jpg {
+      
+      // READ ACCESS
+      // - User can read their own photo
+      // - Any authenticated user can read student photos (teachers need this)
+      allow read: if request.auth != null && (
+        request.auth.uid == userId ||
+        role == 'student'
+      );
+      
+      // WRITE ACCESS (Upload/Update)
+      // - Only owner can upload
+      // - Must be authenticated
+      // - Must be valid image
+      // - Must be under 2 MB
+      allow write: if request.auth != null && 
+                      request.auth.uid == userId && 
+                      request.resource.contentType.matches('image/.*') &&
+                      request.resource.size < 2 * 1024 * 1024;
+      
+      // DELETE ACCESS
+      // - Only owner can delete
+      allow delete: if request.auth != null && 
+                       request.auth.uid == userId;
+    }
+    
+    // ========================================================================
+    // DENY ALL OTHER PATHS
+    // ========================================================================
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+// ============================================================================
+// IMPORTANT NOTES:
+// ============================================================================
+//
+// 1. These rules work with Firebase Realtime Database (your current setup)
+// 2. All authenticated users can read student photos (needed for teacher reports)
+// 3. Users can only write/delete their own photos
+// 4. File validation: images only, max 2 MB
+//
+// ============================================================================
+//
+// TESTING:
+// ✅ Student uploads own photo → ALLOWED
+// ✅ Student views own photo → ALLOWED
+// ✅ Teacher views student photo → ALLOWED
+// ✅ Student deletes own photo → ALLOWED
+// ❌ Student uploads to another user's path → DENIED
+// ❌ Upload file > 2 MB → DENIED
+// ❌ Upload non-image → DENIED
+// ❌ Unauthenticated access → DENIED
+//
+// ============================================================================
